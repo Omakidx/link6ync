@@ -14,7 +14,7 @@ export default function Home() {
     <main className="min-h-screen relative overflow-hidden bg-background">
       {/* Logo at Top Left */}
       <motion.div
-        className="fixed top-6 left-6 z-50"
+        className="fixed top-4 left-4 md:top-6 md:left-6 z-50"
         initial={{
           opacity: 0,
           x: -20,
@@ -40,13 +40,13 @@ export default function Home() {
             height={
               60
             }
-            className="hover:scale-110 transition-transform duration-300 cursor-pointer"
+            className="hover:scale-110 transition-transform duration-300 cursor-pointer w-24 h-auto md:w-[150px]"
           />
         </Link>
       </motion.div>
 
       {/* Theme Toggle & GitHub */}
-      <div className="fixed top-6 right-6 z-50 flex items-center gap-3">
+      <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50 flex items-center gap-2 md:gap-3">
         <Button
           variant="outline"
           size="icon"
@@ -70,7 +70,7 @@ export default function Home() {
         <div className="absolute bottom-[-20%] right-[-10%] w-600px h-600px rounded-full bg-primary/5 blur-3xl" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-16 min-h-screen flex flex-col">
+      <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 md:py-16 min-h-screen flex flex-col">
         {/* Header */}
         <motion.header
           initial={{
@@ -81,9 +81,9 @@ export default function Home() {
             opacity: 1,
             y: 0,
           }}
-          className="text-center mb-5 space-y-3"
+          className="text-center mb-5 md:mb-8 space-y-3 mt-8 md:mt-0"
         >
-          <p className="text-foreground md:text-lg max-w-2xl mx-auto font-[family-name:var(--font-gloria)]">
+          <p className="text-sm md:text-lg max-w-2xl mx-auto font-[family-name:var(--font-gloria)] px-4">
             Transform
             long
             URLs
@@ -113,9 +113,9 @@ export default function Home() {
         </motion.div>
 
         {/* Footer */}
-        <footer className="mt-16 text-center">
-          <div className="inline-block px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full">
-            <p className="text-muted-foreground text-sm">
+        <footer className="mt-8 md:mt-16 text-center pb-4">
+          <div className="inline-block px-4 md:px-6 py-2 md:py-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-full">
+            <p className="text-muted-foreground text-xs md:text-sm">
               ©
               2025
               Link6ync

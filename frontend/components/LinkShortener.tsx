@@ -149,17 +149,17 @@ const LinkShortener =
 
     return (
       <Card className="w-full border-white/10 bg-card/50 backdrop-blur-xl">
-        <CardContent className="p-8">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+        <CardContent className="p-4 md:p-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
             {/* Left Column: Input and Action */}
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <h2 className="text-3xl font-bold tracking-tight">
+            <div className="space-y-4 md:space-y-6">
+              <div className="space-y-2 md:space-y-3">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
                   Shorten
                   Your
                   Link
                 </h2>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   Convert
                   long
                   URLs
@@ -177,7 +177,7 @@ const LinkShortener =
                 onSubmit={
                   handleSubmit
                 }
-                className="space-y-4"
+                className="space-y-3 md:space-y-4"
               >
                 <Input
                   type="url"
@@ -194,7 +194,7 @@ const LinkShortener =
                         .value
                     )
                   }
-                  className="h-12 bg-background/80 border-white/10"
+                  className="h-11 md:h-12 bg-background/80 border-white/10 text-sm md:text-base"
                   required
                 />
 
@@ -204,7 +204,7 @@ const LinkShortener =
                     loading ||
                     !originalUrl
                   }
-                  className="w-full h-12 font-semibold cursor-pointer"
+                  className="w-full h-11 md:h-12 font-semibold cursor-pointer text-sm md:text-base"
                   size="lg"
                 >
                   {loading ? (
@@ -247,8 +247,8 @@ const LinkShortener =
             </div>
 
             {/* Right Column: Results */}
-            <Card className="min-h-[340px] flex items-center justify-center bg-background/60 border-white/10">
-              <CardContent className="p-6 w-full">
+            <Card className="min-h-[280px] md:min-h-[340px] flex items-center justify-center bg-background/60 border-white/10">
+              <CardContent className="p-4 md:p-6 w-full">
                 <AnimatePresence mode="wait">
                   {shortUrl ? (
                     <motion.div
@@ -268,14 +268,14 @@ const LinkShortener =
                       className="space-y-6"
                     >
                       {/* QR Code */}
-                      <div className="flex flex-col items-center space-y-3">
-                        <div className="p-3 bg-white rounded-xl shadow-sm">
+                      <div className="flex flex-col items-center space-y-2 md:space-y-3">
+                        <div className="p-2 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm">
                           <QRCodeSVG
                             value={
                               shortUrl
                             }
                             size={
-                              160
+                              140
                             }
                             level="H"
                             includeMargin={
@@ -283,7 +283,7 @@ const LinkShortener =
                             }
                           />
                         </div>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[10px] md:text-xs text-muted-foreground">
                           Scan
                           to
                           visit
@@ -292,20 +292,20 @@ const LinkShortener =
                       </div>
 
                       {/* Short URL */}
-                      <div className="flex items-center gap-2 p-3 bg-card/50 border border-white/10 rounded-lg hover:border-primary/30 transition-colors">
+                      <div className="flex items-center gap-2 p-2 md:p-3 bg-card/50 border border-white/10 rounded-lg hover:border-primary/30 transition-colors">
                         <a
                           href={
                             shortUrl
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 truncate text-sm font-mono hover:text-primary transition-colors"
+                          className="flex-1 truncate text-xs md:text-sm font-mono hover:text-primary transition-colors"
                         >
                           {
                             shortUrl
                           }
                         </a>
-                        <div className="flex gap-1">
+                        <div className="flex gap-0.5 md:gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
