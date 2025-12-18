@@ -246,8 +246,8 @@ const LinkShortener =
             </div>
 
             {/* Right Column: Results */}
-            <Card className="min-h-[280px] md:min-h-[340px] flex items-center justify-center bg-background/60 border-white/10">
-              <CardContent className="p-4 md:p-6 w-full">
+            <Card className="min-h-[280px] md:min-h-[340px] flex items-center justify-center bg-background/60 border-white/10 overflow-hidden">
+              <CardContent className="p-3 md:p-6 w-full max-w-full">
                 <AnimatePresence mode="wait">
                   {shortUrl ? (
                     <motion.div
@@ -264,25 +264,26 @@ const LinkShortener =
                         opacity: 0,
                         scale: 0.95,
                       }}
-                      className="space-y-6"
+                      className="space-y-3 md:space-y-6 w-full"
                     >
                       {/* QR Code */}
-                      <div className="flex flex-col items-center space-y-2 md:space-y-3">
-                        <div className="p-2 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm">
+                      <div className="flex flex-col items-center space-y-2 md:space-y-3 w-full">
+                        <div className="p-2 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm flex items-center justify-center">
                           <QRCodeSVG
                             value={
                               shortUrl
                             }
                             size={
-                              140
+                              120
                             }
                             level="H"
                             includeMargin={
                               false
                             }
+                            className="max-w-full h-auto"
                           />
                         </div>
-                        <p className="text-[10px] md:text-xs text-muted-foreground">
+                        <p className="text-[10px] md:text-xs text-muted-foreground text-center">
                           Scan
                           to
                           visit
@@ -291,38 +292,38 @@ const LinkShortener =
                       </div>
 
                       {/* Short URL */}
-                      <div className="flex items-center gap-2 p-2 md:p-3 bg-card/50 border border-white/10 rounded-lg hover:border-primary/30 transition-colors">
+                      <div className="flex items-center gap-1 md:gap-2 p-2 md:p-3 bg-card/50 border border-white/10 rounded-lg hover:border-primary/30 transition-colors overflow-hidden">
                         <a
                           href={
                             shortUrl
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 truncate text-xs md:text-sm font-mono hover:text-primary transition-colors"
+                          className="flex-1 truncate text-xs md:text-sm font-mono hover:text-primary transition-colors min-w-0"
                         >
                           {
                             shortUrl
                           }
                         </a>
-                        <div className="flex gap-0.5 md:gap-1">
+                        <div className="flex gap-0.5 md:gap-1 flex-shrink-0">
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-7 w-7 md:h-8 md:w-8"
                             onClick={
                               copyToClipboard
                             }
                           >
                             {copied ? (
-                              <Check className="h-4 w-4 text-green-500" />
+                              <Check className="h-3.5 w-3.5 md:h-4 md:w-4 text-green-500" />
                             ) : (
-                              <Copy className="h-4 w-4" />
+                              <Copy className="h-3.5 w-3.5 md:h-4 md:w-4" />
                             )}
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-7 w-7 md:h-8 md:w-8"
                             asChild
                           >
                             <a
@@ -332,7 +333,7 @@ const LinkShortener =
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <ExternalLink className="h-4 w-4" />
+                              <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
                             </a>
                           </Button>
                         </div>
