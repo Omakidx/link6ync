@@ -104,17 +104,16 @@ const LinkShortener =
             );
 
           // Construct the full short URL
-          // Assuming backend returns { message: ..., url: { shortUrl: '...' } } based on server.ts
-          // server.ts: res.json({ message: 'URL shortened successfully', url:url });
-          // url object has shortUrl property based on schema usage imply
-
+          // Use custom domain for display, or fallback to API URL
+          const shortUrlDomain = process.env.NEXT_PUBLIC_SHORT_URL_DOMAIN || apiUrl;
+          
           const shortCode =
             response
               .data
               .url
               .shortUrl;
           setShortUrl(
-            `${apiUrl}/${shortCode}`
+            `${shortUrlDomain}/${shortCode}`
           );
         } catch (err) {
           console.error(
