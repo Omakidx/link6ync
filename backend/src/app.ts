@@ -12,13 +12,22 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: process.env.FRONTEND_URL || "https://link6ync.app",
   credentials: true, // Allow cookies to be sent
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.set("trust proxy", 1); // Trust first proxy if behind a proxy (e.g., Heroku, Nginx)
+
+// DEBUG: Log incoming origin for CORS troubleshooting
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  console.log(`[CORS DEBUG] Incoming request from origin: ${origin}`);
+  console.log(`[CORS DEBUG] Allowed Frontend URL: ${process.env.FRONTEND_URL}`);
+  next();
+});
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());

@@ -11,6 +11,7 @@ const startServer = async () => {
 
   server.listen(process.env.PORT || 5000, () => {
     console.log(`server is now starting on PORT ${process.env.PORT}`);
+    console.log(`[CORS DEBUG] Configured FRONTEND_URL: ${process.env.FRONTEND_URL}`);
   });
 };
 
