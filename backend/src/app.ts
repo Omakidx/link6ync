@@ -12,7 +12,11 @@ const app = express();
 
 // CORS configuration
 // Custom CORS origin handler for detailed debugging
-const allowedFrontendUrl = process.env.FRONTEND_URL || "https://link6ync.app";
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "https://link6ync.app",
+  "https://www.link6ync.app",
+  "https://link6ync.app"
+];
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
@@ -22,9 +26,10 @@ const corsOptions: cors.CorsOptions = {
       return callback(null, true);
     }
 
-    console.log(`[CORS] Checking origin: '${origin}' against allowed: '${allowedFrontendUrl}'`);
+    console.log(`[CORS] Checking origin: '${origin}'`);
 
-    if (origin === allowedFrontendUrl) {
+    if (allowedOrigins.includes(origin)) {
+      console.log(`[CORS] ALLOWED origin: '${origin}'`);
       return callback(null, true);
     } else {
       console.error(`[CORS] BLOCKED origin: '${origin}'`);
