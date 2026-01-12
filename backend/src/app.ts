@@ -11,20 +11,36 @@ import adminRouter from "./routes/admin.routes";
 const app = express();
 
 // CORS configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "https://link6ync.app",
-  credentials: true, // Allow cookies to be sent
+// Custom CORS origin handler for detailed debugging
+const allowedFrontendUrl = process.env.FRONTEND_URL || "https://link6ync.app";
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      console.log("[CORS] Allowing no-origin request");
+      return callback(null, true);
+    }
+
+    console.log(`[CORS] Checking origin: '${origin}' against allowed: '${allowedFrontendUrl}'`);
+
+    if (origin === allowedFrontendUrl) {
+      return callback(null, true);
+    } else {
+      console.error(`[CORS] BLOCKED origin: '${origin}'`);
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.set("trust proxy", 1); // Trust first proxy if behind a proxy (e.g., Heroku, Nginx)
+app.set("trust proxy", 1); 
 
-// DEBUG: Log incoming origin for CORS troubleshooting
+// Request Logger
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  console.log(`[CORS DEBUG] Incoming request from origin: ${origin}`);
-  console.log(`[CORS DEBUG] Allowed Frontend URL: ${process.env.FRONTEND_URL}`);
+  console.log(`[REQUEST] ${req.method} ${req.path} | Origin: ${req.headers.origin}`);
   next();
 });
 
