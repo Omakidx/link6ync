@@ -84,7 +84,7 @@ export const registerHandler = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
@@ -131,7 +131,7 @@ export const verifyEmailHandler = async (req: Request, res: Response) => {
     return res.json({ message: "Email is now verified" });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
@@ -208,7 +208,7 @@ export const loginHandler = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
@@ -301,7 +301,7 @@ export const forgotPasswordHandler = async (req: Request, res: Response) => {
     return res.status(201).json({ message: "If an account with this email exists, we would send you a reset link" });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
@@ -345,7 +345,7 @@ export const resetPasswordHandler = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "Password has been reset successfully" });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
@@ -637,7 +637,7 @@ export const googleAuthCallbackHandler = async (req: Request, res: Response) => 
     }
 
     return res.status(500).json({
-      message: "Internal Server Error",
+      message: error instanceof Error ? error.message : "Internal Server Error",
     });
   }
 };
