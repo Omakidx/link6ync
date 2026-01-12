@@ -16,3 +16,13 @@ export function getInitials(name: string): string {
 
   return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
 }
+
+export function formatDate(date: string | Date | undefined | null): string {
+  if (!date) return 'N/A';
+  
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
