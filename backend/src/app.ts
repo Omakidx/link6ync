@@ -4,9 +4,9 @@ dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRouter from "@/routes/user.routes";
-import authRouter from "@/routes/auth.routes";
-import adminRouter from "@/routes/admin.routes";
+import userRouter from "./routes/user.routes";
+import authRouter from "./routes/auth.routes";
+import adminRouter from "./routes/admin.routes";
 
 const app = express();
 

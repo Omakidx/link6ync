@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { registerSchema, loginSchema } from "./auth.schema";
-import { User } from "@/models/user.model";
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from "@/libs/email";
-import { hashPassword, checkPass } from "@/libs/hashed";
+import { User } from "../../models/user.model";
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from "../../libs/email";
+import { hashPassword, checkPass } from "../../libs/hashed";
 import jwt from "jsonwebtoken";
-import { createAccessToken, createRefreshToken, verifyRefreshToken } from "@/libs/token";
+import { createAccessToken, createRefreshToken, verifyRefreshToken } from "../../libs/token";
 import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
 import { authenticator } from "otplib";

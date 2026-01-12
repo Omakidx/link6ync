@@ -1,8 +1,8 @@
-import requireAuth from "@/middlewares/requireAuth";
-import requireRole from "@/middlewares/requireRole";
+import requireAuth from "../middlewares/requireAuth";
+import requireRole from "../middlewares/requireRole";
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { User } from "@/models/user.model";
+import { User } from "../models/user.model";
 
 const router = Router();
 

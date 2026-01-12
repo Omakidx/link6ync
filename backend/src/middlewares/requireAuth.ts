@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "@/libs/token";
-import { User } from "@/models/user.model";
+import { verifyAccessToken } from "../libs/token";
+import { User } from "../models/user.model";
 
 const requireAuth = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   const authHeader = req.headers.authorization;

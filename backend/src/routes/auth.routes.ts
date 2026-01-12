@@ -14,15 +14,15 @@ import {
   verify2FALoginHandler,
   disable2FAHandler,
   verifyEmailHandler,
-} from "@/controllers/auth/auth.controller";
-import requireAuth from "@/middlewares/requireAuth";
+} from "../controllers/auth/auth.controller";
+import requireAuth from "../middlewares/requireAuth";
 import {
   authLimiter,
   loginLimiter,
   passwordResetLimiter,
   verificationLimiter,
   twoFactorLimiter,
-} from "@/middlewares/rateLimiter";
+} from "../middlewares/rateLimiter";
 import { Router } from "express";
 
 const router = Router();
