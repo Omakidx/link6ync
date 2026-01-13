@@ -69,7 +69,7 @@ export default function DashboardLayout({
       icon: "/assets/settings-icon.svg",
     },
     {
-      name: "Help",
+      name: "Help & Support",
       href: "/dashboard/help",
       icon: "/assets/help-icon.svg",
     },
