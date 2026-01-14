@@ -43,6 +43,22 @@ const userSchema = new Schema(
       default: false,
     },
 
+    profilePicture: {
+      type: String,
+      default: undefined,
+    },
+
+    phoneNumber: {
+      type: String,
+      default: undefined,
+    },
+
+    accountType: {
+      type: String,
+      enum: ["Advertiser", "Publisher", "Agency"],
+      default: "Advertiser",
+    },
+
     tokenVersion: {
       type: Number,
       default: 0,

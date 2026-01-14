@@ -200,9 +200,14 @@ export const loginHandler = async (req: Request, res: Response) => {
       user: {
         id: user.id,
         email: user.email,
+        name: user.name,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
         twoFactorEnabled: user.twoFactorEnabled,
+        isOAuthUser: user.isOAuthUser,
+        profilePicture: user.profilePicture,
+        phoneNumber: user.phoneNumber,
+        accountType: user.accountType,
       },
     });
   } catch (error) {
@@ -250,9 +255,14 @@ export const refreshHandler = async (req: Request, res: Response) => {
       user: {
         id: user.id,
         email: user.email,
+        name: user.name,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
         twoFactorEnabled: user.twoFactorEnabled,
+        isOAuthUser: user.isOAuthUser,
+        profilePicture: user.profilePicture,
+        phoneNumber: user.phoneNumber,
+        accountType: user.accountType,
       },
     });
   } catch (error) {
@@ -825,6 +835,10 @@ export const verify2FALoginHandler = async (req: Request, res: Response) => {
         role: user.role,
         isEmailVerified: user.isEmailVerified,
         twoFactorEnabled: user.twoFactorEnabled,
+        isOAuthUser: user.isOAuthUser,
+        profilePicture: user.profilePicture,
+        phoneNumber: user.phoneNumber,
+        accountType: user.accountType,
       },
     });
   } catch (error: any) {

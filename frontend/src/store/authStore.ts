@@ -165,6 +165,11 @@ export const useAuthStore =
 
         initialize:
           async () => {
+            // If already initialized, skip
+            if (get().isInitialized) {
+              return;
+            }
+
             const token =
               getAccessToken();
 
@@ -180,6 +185,36 @@ export const useAuthStore =
                   user: null,
                 }
               );
+              return;
+            }
+
+            // If we have persisted user data, use it immediately
+            const currentUser = get().user;
+            if (currentUser) {
+              set({
+                isInitialized: true,
+                isAuthenticated: true,
+              });
+              
+              // Refresh user data in background
+              getCurrentUser()
+                .then((response) => {
+                  set({ user: response.user });
+                })
+                .catch(() => {
+                  // Try refresh token
+                  refreshTokenApi()
+                    .then((response) => {
+                      set({ user: response.user });
+                    })
+                    .catch(() => {
+                      removeAccessToken();
+                      set({
+                        user: null,
+                        isAuthenticated: false,
+                      });
+                    });
+                });
               return;
             }
 

@@ -204,21 +204,25 @@ export default function DashboardLayout({
           </div>
 
           {/* User Profile */}
-          <div className="flex items-center gap-3 cursor-pointer">
-            <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-200 relative flex justify-center items-center">
-               {/* Using a placeholder since we don't have the specific user photo. 
-                   Ideally this comes from authStore user.image or similar. 
-               */}
-               <Image
-                 src="/assets/account-icon.svg" 
-                 alt="User"
-                 width={24}
-                 height={24}
-                 className="opacity-70"
-               /> 
+          <Link href="/dashboard/settings" className="flex items-center gap-3 cursor-pointer">
+            <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-200 relative flex justify-center items-center bg-gray-100">
+               {user?.profilePicture ? (
+                 <img
+                   src={user.profilePicture}
+                   alt={user.name || "User"}
+                   className="w-full h-full object-cover"
+                 />
+               ) : (
+                 <Image
+                   src="/assets/account-icon.svg" 
+                   alt="User"
+                   width={24}
+                   height={24}
+                   className="opacity-70"
+                 />
+               )}
             </div>
-            <ChevronDown className="w-4 h-4 text-gray-500" />
-          </div>
+          </Link>
         </div>
         <div>
            {children}

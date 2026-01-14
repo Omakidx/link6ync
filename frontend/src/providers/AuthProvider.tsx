@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store";
 import { LoadingScreen } from "@/components/ui";
@@ -28,13 +28,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, isLoading, isInitialized, initialize, user } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
+  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
     initialize();
+    
+    // Timeout after 5 seconds to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (!useAuthStore.getState().isInitialized) {
+        setTimedOut(true);
+      }
+    }, 5000);
+    
+    return () => clearTimeout(timeout);
   }, [initialize]);
 
   useEffect(() => {
-    if (!isInitialized) return;
+    if (!isInitialized && !timedOut) return;
 
     const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"));
     const isAdminRoute = adminRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"));
@@ -57,10 +67,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       router.replace("/dashboard");
       return;
     }
-  }, [isAuthenticated, isInitialized, pathname, router, user]);
+  }, [isAuthenticated, isInitialized, timedOut, pathname, router, user]);
 
-  // Show loading screen while initializing
-  if (!isInitialized) {
+  // Show loading screen while initializing (with timeout)
+  if (!isInitialized && !timedOut) {
     return <LoadingScreen message="Loading..." />;
   }
 

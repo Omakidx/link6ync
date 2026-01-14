@@ -1,364 +1,423 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAuthStore } from "@/store";
-import { DashboardLayout } from "@/components/layout";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { Pencil, ChevronDown, Loader2 } from "lucide-react";
+import Input from "@/components/ui/Input";
+import PhoneInputFloatingLabel from "@/components/ui/PhoneInputFloatingLabel";
+import { useAuthStore } from "@/store/authStore";
+import { useToastStore } from "@/store/toastStore";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  Button,
-  Input,
-  Alert,
-  Badge,
-} from "@/components/ui";
-import { setup2FA, verify2FA, disable2FA } from "@/lib/api";
-import { Shield, Smartphone, Lock, Eye, EyeOff, KeyRound, X } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import toast from "react-hot-toast";
+  updateProfile,
+  uploadProfilePicture,
+  deleteProfilePicture,
+} from "@/lib/api/user";
+
+type TabType = "profile" | "payment" | "notification" | "account-security";
 
 export default function SettingsPage() {
-  const { user, refreshAuth } = useAuthStore();
-  const [showPasswordSection, setShowPasswordSection] = useState(false);
-  const [show2FASetup, setShow2FASetup] = useState(false);
-  const [showDisable2FAModal, setShowDisable2FAModal] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const [secret, setSecret] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [disableCode, setDisableCode] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
+  const addToast = useToastStore((s) => s.addToast);
 
-  const handle2FASetup = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await setup2FA();
-      setQrCodeUrl(response.otpauthUrl);
-      setSecret(response.secret);
-      setShow2FASetup(true);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to setup 2FA");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [activeTab, setActiveTab] = useState<TabType>("profile");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const [isDeletingPicture, setIsDeletingPicture] = useState(false);
 
-  const handleVerify2FA = async () => {
-    if (verificationCode.length !== 6) {
-      setError("Please enter a 6-digit code");
-      return;
-    }
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    setIsLoading(true);
-    setError(null);
-    try {
-      await verify2FA({
-        twoFactorCode: verificationCode,
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    accountType: "Advertiser" as "Advertiser" | "Publisher" | "Agency",
+  });
+
+  // Load user data on mount
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.name || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        accountType: user.accountType || "Advertiser",
       });
-      toast.success("Two-factor authentication enabled!");
-      setShow2FASetup(false);
-      setVerificationCode("");
-      await refreshAuth();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid verification code");
+    }
+  }, [user]);
+
+  const tabs: { id: TabType; label: string }[] = [
+    { id: "profile", label: "Profile" },
+    { id: "payment", label: "Payment" },
+    { id: "notification", label: "Notification" },
+    { id: "account-security", label: "Account Security" },
+  ];
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    try {
+      const response = await updateProfile({
+        name: formData.fullName,
+        phoneNumber: formData.phoneNumber,
+        accountType: formData.accountType,
+      });
+      setUser(response.user);
+      setIsEditing(false);
+      addToast({ message: "Profile updated successfully", type: "success" });
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Failed to update profile";
+      addToast({ message, type: "error" });
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  const handleDisable2FA = async () => {
-    if (disableCode.length !== 6) {
-      setError("Please enter a 6-digit code");
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      addToast({ message: "Only image files (JPEG, PNG, GIF, WebP) are allowed", type: "error" });
       return;
     }
 
-    setIsLoading(true);
-    setError(null);
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      addToast({ message: "File size must be less than 5MB", type: "error" });
+      return;
+    }
+
+    setIsUploadingPicture(true);
     try {
-      await disable2FA(disableCode);
-      toast.success("Two-factor authentication disabled");
-      setShowDisable2FAModal(false);
-      setDisableCode("");
-      await refreshAuth();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to disable 2FA");
+      const response = await uploadProfilePicture(file);
+      setUser(response.user);
+      addToast({ message: "Profile picture uploaded successfully", type: "success" });
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Failed to upload profile picture";
+      addToast({ message, type: "error" });
     } finally {
-      setIsLoading(false);
+      setIsUploadingPicture(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleDeletePicture = async () => {
+    if (!user?.profilePicture) return;
+
+    setIsDeletingPicture(true);
+    try {
+      const response = await deleteProfilePicture();
+      setUser(response.user);
+      addToast({ message: "Profile picture deleted successfully", type: "success" });
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Failed to delete profile picture";
+      addToast({ message, type: "error" });
+    } finally {
+      setIsDeletingPicture(false);
     }
   };
 
   return (
-    <DashboardLayout>
-      <div className="max-w-3xl mx-auto space-y-8">
-        {/* Page Header */}
+    <div className="p-8">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600">Manage your account security and preferences</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage your profile, payment, and account settings
+          </p>
         </div>
-
-        {/* Two-Factor Authentication */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Smartphone className="w-5 h-5" />
-                  Two-Factor Authentication
-                </CardTitle>
-                <CardDescription>Add an extra layer of security to your account</CardDescription>
-              </div>
-              <Badge variant={user?.twoFactorEnabled ? "success" : "default"}>
-                {user?.twoFactorEnabled ? "Enabled" : "Disabled"}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {error && (
-              <Alert variant="error" className="mb-4" onClose={() => setError(null)}>
-                {error}
-              </Alert>
-            )}
-
-            {!user?.twoFactorEnabled && !show2FASetup && (
-              <div className="bg-gray-50 rounded-lg p-6 text-center">
-                <div className="w-16 h-16 mx-auto bg-primary-100 rounded-full flex items-center justify-center mb-4">
-                  <Shield className="w-8 h-8 text-primary-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Protect your account</h3>
-                <p className="text-gray-600 mb-6">
-                  Two-factor authentication adds an extra layer of security by requiring a code from your authenticator
-                  app.
-                </p>
-                <Button onClick={handle2FASetup} isLoading={isLoading}>
-                  Enable Two-Factor Authentication
-                </Button>
-              </div>
-            )}
-
-            {show2FASetup && (
-              <div className="space-y-6">
-                <Alert variant="info">
-                  Scan the QR code with your authenticator app (like Google Authenticator or Authy), then enter the
-                  6-digit code.
-                </Alert>
-
-                <div className="flex flex-col items-center gap-4">
-                  <div className="p-4 bg-white rounded-xl border border-gray-200">
-                    <QRCodeSVG value={qrCodeUrl} size={200} />
-                  </div>
-
-                  <div className="text-center">
-                    <p className="text-sm text-gray-500 mb-1">Can&apos;t scan? Enter this code manually:</p>
-                    <code className="px-3 py-1 bg-gray-100 rounded font-mono text-sm">{secret}</code>
-                  </div>
-                </div>
-
-                <div className="max-w-xs mx-auto">
-                  <Input
-                    label="Verification Code"
-                    placeholder="Enter 6-digit code"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    leftIcon={<KeyRound className="w-5 h-5" />}
-                  />
-                </div>
-
-                <div className="flex justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShow2FASetup(false);
-                      setVerificationCode("");
-                      setError(null);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button onClick={handleVerify2FA} isLoading={isLoading}>
-                    Verify & Enable
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {user?.twoFactorEnabled && (
-              <div className="space-y-4">
-                <div className="bg-green-50 rounded-lg p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-green-900">Two-factor authentication is enabled</h3>
-                      <p className="text-sm text-green-700">
-                        Your account is protected with an extra layer of security
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowDisable2FAModal(true)}
-                  className="text-red-600 hover:bg-red-50"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Disable 2FA
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Password Change */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Lock className="w-5 h-5" />
-              Password
-            </CardTitle>
-            <CardDescription>
-              {user?.isOAuthUser
-                ? "You signed up with Google OAuth and don't have a password set"
-                : "Update your password to keep your account secure"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {user?.isOAuthUser ? (
-              <div className="bg-blue-50 rounded-lg p-4">
-                <p className="text-sm text-blue-700">
-                  You signed in using Google OAuth. To set a password for your account, you can use the "Forgot
-                  Password" feature from the login page.
-                </p>
-              </div>
-            ) : !showPasswordSection ? (
-              <Button variant="outline" onClick={() => setShowPasswordSection(true)}>
-                Change Password
-              </Button>
-            ) : (
-              <div className="space-y-4">
-                <Input
-                  label="Current Password"
-                  type="password"
-                  placeholder="Enter current password"
-                  leftIcon={<Lock className="w-5 h-5" />}
-                />
-                <Input
-                  label="New Password"
-                  type="password"
-                  placeholder="Enter new password"
-                  leftIcon={<Lock className="w-5 h-5" />}
-                />
-                <Input
-                  label="Confirm New Password"
-                  type="password"
-                  placeholder="Confirm new password"
-                  leftIcon={<Lock className="w-5 h-5" />}
-                />
-                <div className="flex gap-3 pt-2">
-                  <Button
-                    onClick={() => {
-                      toast.success("Password updated successfully!");
-                      setShowPasswordSection(false);
-                    }}
-                  >
-                    Update Password
-                  </Button>
-                  <Button variant="outline" onClick={() => setShowPasswordSection(false)}>
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Session Management */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <KeyRound className="w-5 h-5" />
-              Sessions
-            </CardTitle>
-            <CardDescription>Manage your active sessions and sign out from other devices</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4 flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-900">Current Session</p>
-                <p className="text-sm text-gray-500">This device • Last active: Now</p>
-              </div>
-              <Badge variant="success">Active</Badge>
-            </div>
-            <div className="mt-4">
-              <Button variant="outline" className="text-red-600 hover:bg-red-50">
-                Sign out all other sessions
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <button
+          onClick={handleSaveChanges}
+          disabled={isSaving}
+          className="px-5 py-2.5 bg-[#003DB8] text-white text-sm font-medium rounded-lg hover:bg-[#002d8a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
+          Save Changes
+        </button>
       </div>
 
-      {/* Disable 2FA Modal */}
-      {showDisable2FAModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Disable Two-Factor Authentication</h3>
+      {/* Tab Navigation */}
+      <div className="flex gap-6 border-b border-gray-200 mb-8">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`pb-3 text-sm font-medium transition-colors relative ${
+              activeTab === tab.id
+                ? "text-[#003DB8]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {tab.label}
+            {activeTab === tab.id && (
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#003DB8]" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Profile Settings Content */}
+      {activeTab === "profile" && (
+        <div className="space-y-8">
+          {/* Profile Settings Section */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-1">
+              Profile Settings
+            </h2>
+            <p className="text-sm text-gray-500 mb-6">
+              When your password, email, or payout details change
+            </p>
+
+            {/* Profile Picture */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
+                {user?.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src="/assets/account-icon.svg"
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    className="opacity-50"
+                  />
+                )}
+                {isUploadingPicture && (
+                  <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                    <Loader2 className="w-6 h-6 animate-spin text-[#003DB8]" />
+                  </div>
+                )}
+              </div>
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+
+              {/* Upload Button */}
               <button
-                onClick={() => {
-                  setShowDisable2FAModal(false);
-                  setDisableCode("");
-                  setError(null);
-                }}
-                className="text-gray-400 hover:text-gray-600"
+                onClick={handleUploadClick}
+                disabled={isUploadingPicture}
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <X className="w-5 h-5" />
+                {isUploadingPicture ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    Upload
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M14 10V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V10"
+                        stroke="#4A5565"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M11.3333 5.33333L8 2L4.66667 5.33333"
+                        stroke="#4A5565"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M8 2V10"
+                        stroke="#4A5565"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </>
+                )}
+              </button>
+
+              {/* Delete Button - only show if user has a profile picture */}
+              {user?.profilePicture && (
+                <button
+                  onClick={handleDeletePicture}
+                  disabled={isDeletingPicture}
+                  className="flex items-center justify-center w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Delete profile picture"
+                >
+                  {isDeletingPicture ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+                  ) : (
+                    <Image
+                      src="/assets/delete-icon.svg"
+                      alt="Delete"
+                      width={18}
+                      height={20}
+                    />
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Personal Information */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-base font-semibold text-gray-900">
+                Personal Information
+              </h3>
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <Pencil className="w-4 h-4 text-gray-500" />
               </button>
             </div>
 
-            <Alert variant="warning" className="mb-4">
-              This will make your account less secure. Enter your current 6-digit code to confirm.
-            </Alert>
+            <div className="grid grid-cols-2 gap-6">
+              {/* Full Name */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  value={formData.fullName}
+                  onChange={(e) => handleInputChange("fullName", e.target.value)}
+                  disabled={!isEditing}
+                  className={`w-full px-4 py-3 border rounded-lg text-sm text-gray-900 disabled:cursor-not-allowed ${
+                    isEditing 
+                      ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" 
+                      : "border-gray-200 bg-gray-50"
+                  }`}
+                />
+              </div>
 
-            {error && (
-              <Alert variant="error" className="mb-4" onClose={() => setError(null)}>
-                {error}
-              </Alert>
-            )}
+              {/* Email Address */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  disabled
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 cursor-not-allowed"
+                />
+              </div>
 
-            <div className="mb-6">
-              <Input
-                label="Verification Code"
-                placeholder="Enter 6-digit code"
-                value={disableCode}
-                onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                leftIcon={<KeyRound className="w-5 h-5" />}
-              />
+              {/* Phone Number */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">
+                  Phone Number
+                </label>
+                <PhoneInputFloatingLabel
+                  defaultCountry="NG"
+                  className={`max-w-full ${isEditing ? "[&_input]:border-[#003DB8] [&_input]:ring-2 [&_input]:ring-[#003DB8]/20 [&_input]:bg-white" : ""}`}
+                  disabled={!isEditing}
+                  value={formData.phoneNumber}
+                  onChange={(data) => handleInputChange("phoneNumber", data.fullNumber)}
+                />
+              </div>
+
+              {/* Account Type */}
+              <div>
+                <label className="block text-sm text-gray-600 mb-2">
+                  Account Type
+                </label>
+                <div className="relative">
+                  <select
+                    value={formData.accountType}
+                    onChange={(e) =>
+                      handleInputChange("accountType", e.target.value)
+                    }
+                    disabled={!isEditing}
+                    className={`w-full px-4 py-3 border rounded-lg text-sm text-gray-900 appearance-none cursor-pointer disabled:cursor-not-allowed ${
+                      isEditing 
+                        ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" 
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  >
+                    <option value="Advertiser">Advertiser</option>
+                    <option value="Publisher">Publisher</option>
+                    <option value="Agency">Agency</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowDisable2FAModal(false);
-                  setDisableCode("");
-                  setError(null);
-                }}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleDisable2FA} isLoading={isLoading} className="flex-1 bg-red-600 hover:bg-red-700">
-                Disable 2FA
-              </Button>
+          {/* Danger Zone */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-semibold text-red-600 mb-1">
+                  Danger Zone
+                </h3>
+                <p className="text-sm text-gray-500">
+                  You can delete your account from here and all the data associated to it
+                </p>
+              </div>
+              <button className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors">
+                <Image
+                  src="/assets/delete-icon.svg"
+                  alt="Delete"
+                  width={16}
+                  height={16}
+                  className="brightness-0 invert"
+                />
+                Delete Account
+              </button>
             </div>
           </div>
         </div>
       )}
-    </DashboardLayout>
+
+      {/* Payment Tab Content */}
+      {activeTab === "payment" && (
+        <div className="text-center py-16 text-gray-500">
+          <p>Payment settings coming soon...</p>
+        </div>
+      )}
+
+      {/* Notification Tab Content */}
+      {activeTab === "notification" && (
+        <div className="text-center py-16 text-gray-500">
+          <p>Notification settings coming soon...</p>
+        </div>
+      )}
+
+      {/* Account Security Tab Content */}
+      {activeTab === "account-security" && (
+        <div className="text-center py-16 text-gray-500">
+          <p>Account security settings coming soon...</p>
+        </div>
+      )}
+    </div>
   );
 }

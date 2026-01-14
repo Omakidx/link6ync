@@ -7,6 +7,9 @@ export interface User {
   isEmailVerified: boolean;
   twoFactorEnabled: boolean;
   isOAuthUser?: boolean;
+  profilePicture?: string;
+  phoneNumber?: string;
+  accountType?: "Advertiser" | "Publisher" | "Agency";
   createdAt?: string;
 }
 
