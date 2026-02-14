@@ -193,10 +193,81 @@ export const deleteProfilePicture = async (req: AuthRequest, res: Response) => {
         profilePicture: undefined,
         phoneNumber: user!.phoneNumber,
         accountType: user!.accountType,
+        billingEmailType: user!.billingEmailType,
+        billingAlternativeEmail: user!.billingAlternativeEmail,
       },
     });
   } catch (error) {
     console.error("Delete profile picture error:", error);
     return res.status(500).json({ message: "Failed to delete profile picture" });
+  }
+};
+
+// Update billing email settings
+export const updateBillingEmail = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { billingEmailType, billingAlternativeEmail } = req.body;
+
+    // Validate billingEmailType
+    if (!billingEmailType || !["account", "alternative"].includes(billingEmailType)) {
+      return res.status(400).json({ message: "Invalid billing email type" });
+    }
+
+    // If alternative email is selected, validate the email
+    if (billingEmailType === "alternative") {
+      if (!billingAlternativeEmail || !billingAlternativeEmail.trim()) {
+        return res.status(400).json({ message: "Alternative email is required" });
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(billingAlternativeEmail)) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+    }
+
+    const updateData: {
+      billingEmailType: string;
+      billingAlternativeEmail?: string;
+    } = {
+      billingEmailType,
+    };
+
+    if (billingEmailType === "alternative") {
+      updateData.billingAlternativeEmail = billingAlternativeEmail;
+    }
+
+    const user = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      select: "-password -twoFactorSecret -resetPasswordToken -resetPasswordExpires -tokenVersion",
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({
+      message: "Billing email settings updated successfully",
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+        twoFactorEnabled: user.twoFactorEnabled,
+        isOAuthUser: user.isOAuthUser,
+        profilePicture: user.profilePicture,
+        phoneNumber: user.phoneNumber,
+        accountType: user.accountType,
+        billingEmailType: user.billingEmailType,
+        billingAlternativeEmail: user.billingAlternativeEmail,
+      },
+    });
+  } catch (error) {
+    console.error("Update billing email error:", error);
+    return res.status(500).json({ message: "Failed to update billing email settings" });
   }
 };

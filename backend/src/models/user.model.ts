@@ -59,6 +59,18 @@ const userSchema = new Schema(
       default: "Advertiser",
     },
 
+    // Billing/Payment settings
+    billingEmailType: {
+      type: String,
+      enum: ["account", "alternative"],
+      default: "account",
+    },
+
+    billingAlternativeEmail: {
+      type: String,
+      default: undefined,
+    },
+
     tokenVersion: {
       type: Number,
       default: 0,

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { AsYouType, type CountryCode } from "libphonenumber-js";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,4 +26,12 @@ export function formatDate(date: string | Date | undefined | null): string {
     month: 'short',
     day: 'numeric',
   });
+}
+
+export function formatPhoneNumber(value: string, countryCode: string): string {
+  const rawInput = value.replace(/\D/g, "");
+  const truncatedDetails = rawInput.slice(0, 15);
+
+  const asYouType = new AsYouType(countryCode as CountryCode);
+  return asYouType.input(truncatedDetails);
 }
