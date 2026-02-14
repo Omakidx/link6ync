@@ -171,9 +171,7 @@ const docSections = [
 function DocsSidebar({ activeId }: { activeId: string }) {
   return (
     <nav className="hidden lg:block w-56 shrink-0 sticky top-8 self-start">
-      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-        On this page
-      </p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">On this page</p>
       <ul className="space-y-1">
         {docSections.map((s) => (
           <li key={s.id}>
@@ -223,7 +221,7 @@ export default function DocsPage() {
           }
         }
       },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
     );
 
     docSections.forEach((s) => {
@@ -247,9 +245,7 @@ export default function DocsPage() {
       {/* Page header */}
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Documentation</h1>
-        <p className="text-gray-500 text-lg">
-          Everything you need to know about using Link6ync.
-        </p>
+        <p className="text-gray-500 text-lg">Everything you need to know about using Link6ync.</p>
       </div>
 
       {/* Content + sidebar */}
@@ -289,9 +285,7 @@ export default function DocsPage() {
       {/* Footer CTA */}
       <div className="mt-16 rounded-xl bg-gray-50 border border-gray-100 p-8 text-center">
         <h3 className="text-lg font-bold text-gray-900 mb-2">Still need help?</h3>
-        <p className="text-gray-500 mb-4 text-sm">
-          Our support team is happy to assist you with any questions.
-        </p>
+        <p className="text-gray-500 mb-4 text-sm">Our support team is happy to assist you with any questions.</p>
         <Link
           href="/dashboard/help"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"

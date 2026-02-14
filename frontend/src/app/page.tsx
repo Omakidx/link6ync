@@ -54,7 +54,8 @@ export default function Home() {
             {/* Left Column - Text Content */}
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 leading-tight">
-                Drive Premium <span style={{ color: "#003DB8" }}>Traffic</span>. Maximize Your <span style={{ color: "#003DB8" }}>Revenue</span>.
+                Drive Premium <span style={{ color: "#003DB8" }}>Traffic</span>. Maximize Your{" "}
+                <span style={{ color: "#003DB8" }}>Revenue</span>.
               </h1>
               <p className="text-lg text-gray-600 mb-8 max-w-lg">
                 Access high-quality traffic and top paying partners to grow your web presence and revenue effortlessly.
@@ -79,14 +80,18 @@ export default function Home() {
             {/* Right Column - Illustration */}
             <div className="relative">
               <div className="relative w-full h-auto">
-                <Image
-                  src="/assets/dashboard-illust.png"
-                  alt="Dashboard Illustration"
-                  width={600}
-                  height={600}
-                  className="w-full h-auto"
-                  priority
-                />
+                <picture>
+                  <source srcSet="/assets/dashboard-illust.avif" type="image/avif" />
+                  <source srcSet="/assets/dashboard-illust.webp" type="image/webp" />
+                  <Image
+                    src="/assets/dashboard-illust.png"
+                    alt="Dashboard Illustration"
+                    width={600}
+                    height={600}
+                    className="w-full h-auto"
+                    priority
+                  />
+                </picture>
               </div>
             </div>
           </div>
@@ -97,14 +102,18 @@ export default function Home() {
       <section className="py-10 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="relative rounded-xl overflow-hidden shadow-lg">
-            <Image
-              src="/assets/dashboard-img.png"
-              alt="Dashboard Preview"
-              width={1200}
-              height={700}
-              className="w-full h-auto block"
-              priority
-            />
+            <picture>
+              <source srcSet="/assets/dashboard-img.avif" type="image/avif" />
+              <source srcSet="/assets/dashboard-img.webp" type="image/webp" />
+              <Image
+                src="/assets/dashboard-img.png"
+                alt="Dashboard Preview"
+                width={1200}
+                height={700}
+                className="w-full h-auto block"
+                priority
+              />
+            </picture>
           </div>
         </div>
       </section>
@@ -207,10 +216,7 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row justify-center" style={{ gap: "24px" }}>
             {/* Advertisers Pricing */}
-            <div
-              className="bg-white rounded-lg p-6 border border-gray-200"
-              style={{ width: "362px", height: "415px" }}
-            >
+            <div className="bg-white rounded-lg p-6 border border-gray-200" style={{ width: "362px", height: "415px" }}>
               <h3 className="text-lg font-bold text-gray-900 mb-4">Advertisers</h3>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">$0.10</span>
@@ -318,9 +324,7 @@ export default function Home() {
                 <Image src="/logo.svg" alt="Link6ync" width={26} height={32} />
                 <span className="text-xl font-bold text-gray-900">Link6ync</span>
               </div>
-              <p className="text-gray-500 text-sm mb-6">
-                Premium PPC platform connecting advertisers and publishers.
-              </p>
+              <p className="text-gray-500 text-sm mb-6">Premium PPC platform connecting advertisers and publishers.</p>
               {/* Social Icons */}
               <div className="flex items-center gap-4">
                 <Link href="#" className="hover:opacity-80 transition-opacity">
