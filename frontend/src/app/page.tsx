@@ -1,66 +1,116 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
+
+function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <nav className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="flex items-center justify-between py-4 sm:py-5">
+          <div className="flex items-center gap-2">
+            <Image src="/logo.svg" alt="Link6ync" width={26} height={32} />
+            <span className="text-xl font-bold text-gray-900">Link6ync</span>
+          </div>
+          <div className="hidden md:flex items-center gap-14">
+            <Link href="#advertisers" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              Advertisers
+              <IoIosArrowDown className="inline-block ml-2" />
+            </Link>
+            <Link href="#publishers" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              Publishers
+              <IoIosArrowDown className="inline-block ml-2" />
+            </Link>
+            <Link href="#works" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              How it works
+            </Link>
+          </div>
+          <div className="hidden sm:flex items-center gap-3">
+            <Link
+              href="/account-type"
+              className="inline-flex items-center px-4 py-2 text-white rounded-lg font-medium transition-colors"
+              style={{ backgroundColor: "#003DB8" }}
+            >
+              Sign Up
+            </Link>
+            <Link
+              href="/login"
+              className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg border"
+              style={{ borderColor: "#808080" }}
+            >
+              Log in
+            </Link>
+          </div>
+          {/* Mobile menu toggle */}
+          <button
+            className="sm:hidden p-2 text-gray-700 hover:text-gray-900"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="sm:hidden bg-white border-t border-gray-100 px-4 pb-5 space-y-3">
+          <Link href="#advertisers" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>
+            Advertisers
+          </Link>
+          <Link href="#publishers" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>
+            Publishers
+          </Link>
+          <Link href="#works" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>
+            How it works
+          </Link>
+          <div className="flex gap-3 pt-2">
+            <Link
+              href="/account-type"
+              className="flex-1 text-center px-4 py-2 text-white rounded-lg font-medium"
+              style={{ backgroundColor: "#003DB8" }}
+            >
+              Sign Up
+            </Link>
+            <Link
+              href="/login"
+              className="flex-1 text-center text-gray-700 font-medium px-4 py-2 rounded-lg border"
+              style={{ borderColor: "#808080" }}
+            >
+              Log in
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white z-50">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="flex items-center justify-between py-5">
-            <div className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="Link6ync" width={26} height={32} />
-              <span className="text-xl font-bold text-gray-900">Link6ync</span>
-            </div>
-            <div className="hidden md:flex items-center gap-14">
-              <Link href="#advertisers" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                Advertisers
-                <IoIosArrowDown className="inline-block ml-2" />
-              </Link>
-              <Link href="#publishers" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                Publishers
-                <IoIosArrowDown className="inline-block ml-2" />
-              </Link>
-              <Link href="#works" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                How it works
-              </Link>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/account-type"
-                className="inline-flex items-center px-4 py-2 text-white rounded-lg font-medium transition-colors"
-                style={{ backgroundColor: "#003DB8" }}
-              >
-                Sign Up
-              </Link>
-              <Link
-                href="/login"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg border"
-                style={{ borderColor: "#808080" }}
-              >
-                Log in
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* Hero Section */}
-      <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="pt-24 sm:pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Column - Text Content */}
-            <div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 leading-tight">
+            <div className="text-center lg:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 leading-tight">
                 Drive Premium <span style={{ color: "#003DB8" }}>Traffic</span>. Maximize Your{" "}
                 <span style={{ color: "#003DB8" }}>Revenue</span>.
               </h1>
               <p className="text-lg text-gray-600 mb-8 max-w-lg">
                 Access high-quality traffic and top paying partners to grow your web presence and revenue effortlessly.
               </p>
-              <div className="flex flex-col sm:flex-row items-start gap-4">
+              <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
                 <Link
                   href="/account-type"
                   className="inline-flex items-center px-8 py-3.5 text-white rounded-lg font-semibold transition-colors shadow-lg"
@@ -125,7 +175,7 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-wide mb-3" style={{ color: "#003DB8" }}>
               ABOUT US
             </p>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
               Powerful Features for
               <br />
               both Sides
@@ -136,7 +186,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="bg-white rounded-xl p-8 border border-gray-200 hover:shadow-lg transition-shadow">
               <div className="w-16 h-16 bg-[#E6F0FF] rounded-xl flex items-center justify-center mb-6">
                 <Image src="/assets/target-icon.png" alt="Targeted Traffic" width={32} height={32} />
@@ -207,16 +257,16 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold text-[#003DB8] uppercase tracking-wide mb-3">Our Pricing</p>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
               Simple and Transparent
               <br />
               Pricing
             </h2>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-center" style={{ gap: "24px" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[748px] mx-auto">
             {/* Advertisers Pricing */}
-            <div className="bg-white rounded-lg p-6 border border-gray-200" style={{ width: "362px", height: "415px" }}>
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Advertisers</h3>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">$0.10</span>
@@ -246,10 +296,7 @@ export default function Home() {
             </div>
 
             {/* Publishers Pricing */}
-            <div
-              className="bg-white rounded-lg p-6 border-2 border-[#003DB8] relative"
-              style={{ width: "362px", height: "415px" }}
-            >
+            <div className="bg-white rounded-lg p-6 border-2 border-[#003DB8] relative">
               <div className="absolute top-3 right-3">
                 <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
                   🔥 Hot
@@ -288,11 +335,11 @@ export default function Home() {
 
       {/* CTA Section */}
       <section
-        className="py-20 px-4 sm:px-6 lg:px-8 rounded-2xl mx-4 sm:mx-6 lg:mx-8 mb-12"
+        className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 rounded-2xl mx-3 sm:mx-6 lg:mx-8 mb-12"
         style={{ background: "linear-gradient(to right, #003DB8, #001B52)" }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">Ready to Get Started?</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold text-white mb-6">Ready to Get Started?</h2>
           <p className="text-lg text-white/90 mb-10 max-w-2xl mx-auto">
             Join thousands of advertisers and publishers who trust Link6ync for premium traffic and maximum revenue.
           </p>
@@ -308,7 +355,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer
-        className="px-12 sm:px-16 lg:px-24 mx-4 sm:mx-6 lg:mx-14 border border-gray-200"
+        className="px-5 sm:px-12 lg:px-24 mx-3 sm:mx-6 lg:mx-14 border border-gray-200"
         style={{
           backgroundColor: "#FFFFFF",
           borderRadius: "16px 16px 0 0",
@@ -340,7 +387,7 @@ export default function Home() {
             </div>
 
             {/* Links Section */}
-            <div className="flex gap-16 md:gap-20">
+            <div className="grid grid-cols-3 gap-8 md:gap-20">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
                 <ul className="space-y-3 text-sm">

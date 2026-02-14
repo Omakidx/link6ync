@@ -91,7 +91,7 @@ function PaymentSettings() {
           <p className="text-sm text-gray-500 mt-0.5">Where should invoices be sent?</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Send to account email option */}
           <div className="flex items-start gap-3 cursor-pointer" onClick={() => setEmailOption("account")}>
             <RadioButton selected={emailOption === "account"} onClick={() => setEmailOption("account")} />
@@ -304,9 +304,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 md:p-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
           <p className="text-sm text-gray-500 mt-1">Manage your profile, payment, and account settings</p>
@@ -322,12 +322,12 @@ export default function SettingsPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-6 border-b border-gray-200 mb-8">
+      <div className="flex gap-4 sm:gap-6 border-b border-gray-200 mb-6 sm:mb-8 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`pb-3 text-sm font-medium transition-colors relative ${
+            className={`pb-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
               activeTab === tab.id ? "text-[#003DB8]" : "text-gray-500 hover:text-gray-700"
             }`}
           >
@@ -437,7 +437,7 @@ export default function SettingsPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Full Name */}
               <div>
                 <label className="block text-sm text-gray-600 mb-2">Full Name</label>
@@ -499,7 +499,7 @@ export default function SettingsPage() {
 
           {/* Danger Zone */}
           <div className="bg-white border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-semibold text-red-600 mb-1">Danger Zone</h3>
                 <p className="text-sm text-gray-500">

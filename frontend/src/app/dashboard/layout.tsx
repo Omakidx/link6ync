@@ -182,7 +182,7 @@ export default function DashboardLayout({
       </Sidebar>
 
       <SidebarInset className="bg-gray-50 bg-[#FDFCFC]">
-        <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100 bg-white">
+        <div className="flex items-center justify-between px-4 sm:px-8 py-4 border-b border-gray-100 bg-white">
           {/* Header Search */}
           <div className="w-full max-w-[380px]">
             <div className="relative">

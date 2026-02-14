@@ -263,7 +263,7 @@ export default function DocsPage() {
               </div>
 
               {/* Sub-articles */}
-              <div className="space-y-6 pl-14">
+              <div className="space-y-6 pl-0 sm:pl-14">
                 {section.content.map((article, idx) => (
                   <article key={idx}>
                     <h3 className="text-base font-semibold text-gray-800 mb-1">{article.heading}</h3>

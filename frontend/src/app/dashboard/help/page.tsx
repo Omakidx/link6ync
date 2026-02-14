@@ -62,24 +62,24 @@ const helpTopics = [
 
 export default function HelpPage() {
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 md:p-8">
       {/* Header Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Help & Support</h1>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Help & Support</h1>
         <p className="text-gray-500 text-lg">How can we assist you today?</p>
       </div>
 
       {/* Search Bar */}
-      <div className="w-full max-w-[892px] mb-12">
+      <div className="w-full max-w-[892px] mb-8 sm:mb-12">
         <div className="relative flex items-center">
           <Input
             type="text"
             placeholder="Search for answers"
-            className="w-full pl-12 pr-32 h-[66px] text-lg rounded-[8px] border-gray-200 shadow-sm"
+            className="w-full pl-10 sm:pl-12 pr-4 sm:pr-32 h-12 sm:h-[66px] text-base sm:text-lg rounded-[8px] border-gray-200 shadow-sm"
             leftIcon={<Search className="w-5 h-5 text-gray-400" />}
           />
-          <div className="absolute right-3">
-            <Button className="bg-[#003DB8] hover:bg-[#002f8a] text-white rounded-[8px] px-8 h-10 font-medium">
+          <div className="absolute right-2 sm:right-3">
+            <Button className="bg-[#003DB8] hover:bg-[#002f8a] text-white rounded-[8px] px-4 sm:px-8 h-9 sm:h-10 text-sm sm:text-base font-medium">
               Search
             </Button>
           </div>
@@ -89,10 +89,10 @@ export default function HelpPage() {
       {/* Popular Topics */}
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-900 mb-6">Popular Topics</h2>
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {helpTopics.map((topic, index) => (
             <Link key={index} href={topic.href} className="group block">
-              <Card className="w-[325px] h-[171px] border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl group-hover:border-primary/20 flex flex-col justify-between">
+              <Card className="h-full min-h-[150px] border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl group-hover:border-primary/20 flex flex-col justify-between">
                 <CardHeader className="p-6 h-full flex flex-col justify-between">
                   <div className="flex items-start justify-between">
                     <div className="flex gap-4">
