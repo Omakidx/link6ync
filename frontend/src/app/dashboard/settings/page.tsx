@@ -7,11 +7,7 @@ import Input from "@/components/ui/Input";
 import PhoneInputFloatingLabel from "@/components/ui/PhoneInputFloatingLabel";
 import { useAuthStore } from "@/store/authStore";
 import { useToastStore } from "@/store/toastStore";
-import {
-  updateProfile,
-  uploadProfilePicture,
-  deleteProfilePicture,
-} from "@/lib/api/user";
+import { updateProfile, uploadProfilePicture, deleteProfilePicture } from "@/lib/api/user";
 
 // Radio Button Component
 function RadioButton({ selected, onClick }: { selected: boolean; onClick: () => void }) {
@@ -23,9 +19,7 @@ function RadioButton({ selected, onClick }: { selected: boolean; onClick: () => 
         selected ? "border-[#003DB8] bg-white" : "border-gray-300 bg-white"
       }`}
     >
-      {selected && (
-        <div className="w-3 h-3 rounded-full bg-[#003DB8]" />
-      )}
+      {selected && <div className="w-3 h-3 rounded-full bg-[#003DB8]" />}
     </button>
   );
 }
@@ -87,9 +81,7 @@ function PaymentSettings() {
       {/* Payment Method Header */}
       <div>
         <h2 className="text-lg font-semibold text-gray-900">Payment Method</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Update your billing details and address
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Update your billing details and address</p>
       </div>
 
       {/* Contact Email Section */}
@@ -101,14 +93,8 @@ function PaymentSettings() {
 
         <div className="grid grid-cols-2 gap-6">
           {/* Send to account email option */}
-          <div
-            className="flex items-start gap-3 cursor-pointer"
-            onClick={() => setEmailOption("account")}
-          >
-            <RadioButton
-              selected={emailOption === "account"}
-              onClick={() => setEmailOption("account")}
-            />
+          <div className="flex items-start gap-3 cursor-pointer" onClick={() => setEmailOption("account")}>
+            <RadioButton selected={emailOption === "account"} onClick={() => setEmailOption("account")} />
             <div>
               <p className="text-sm font-medium text-gray-900">Send to my account email</p>
               <p className="text-sm text-gray-500">{user?.email || "No email set"}</p>
@@ -117,10 +103,7 @@ function PaymentSettings() {
 
           {/* Send to alternative email option */}
           <div className="flex items-start gap-3">
-            <RadioButton
-              selected={emailOption === "alternative"}
-              onClick={() => setEmailOption("alternative")}
-            />
+            <RadioButton selected={emailOption === "alternative"} onClick={() => setEmailOption("alternative")} />
             <div className="flex-1">
               <p
                 className="text-sm font-medium text-gray-900 cursor-pointer"
@@ -144,9 +127,7 @@ function PaymentSettings() {
                       : "border-gray-200 focus:border-[#003DB8] focus:ring-[#003DB8]/20"
                   }`}
                 />
-                {alternativeEmailError && (
-                  <p className="text-xs text-red-500 mt-1">{alternativeEmailError}</p>
-                )}
+                {alternativeEmailError && <p className="text-xs text-red-500 mt-1">{alternativeEmailError}</p>}
               </div>
             </div>
           </div>
@@ -165,31 +146,20 @@ function PaymentSettings() {
             <div
               key={method.id}
               className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
-                selectedCard === method.id
-                  ? "border-[#003DB8] bg-blue-50/30"
-                  : "border-gray-200 hover:border-gray-300"
+                selectedCard === method.id ? "border-[#003DB8] bg-blue-50/30" : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => setSelectedCard(method.id)}
             >
               <div className="flex items-center gap-4">
                 <div className="w-14 h-10 flex items-center justify-center bg-white border border-gray-100 rounded-lg">
-                  <Image
-                    src={method.icon}
-                    alt={method.type}
-                    width={40}
-                    height={28}
-                    className="object-contain"
-                  />
+                  <Image src={method.icon} alt={method.type} width={40} height={28} className="object-contain" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">{method.label}</p>
                   <p className="text-sm text-gray-500">Expiry {method.expiry}</p>
                 </div>
               </div>
-              <RadioButton
-                selected={selectedCard === method.id}
-                onClick={() => setSelectedCard(method.id)}
-              />
+              <RadioButton selected={selectedCard === method.id} onClick={() => setSelectedCard(method.id)} />
             </div>
           ))}
         </div>
@@ -339,9 +309,7 @@ export default function SettingsPage() {
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Manage your profile, payment, and account settings
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Manage your profile, payment, and account settings</p>
         </div>
         <button
           onClick={handleSaveChanges}
@@ -360,15 +328,11 @@ export default function SettingsPage() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`pb-3 text-sm font-medium transition-colors relative ${
-              activeTab === tab.id
-                ? "text-[#003DB8]"
-                : "text-gray-500 hover:text-gray-700"
+              activeTab === tab.id ? "text-[#003DB8]" : "text-gray-500 hover:text-gray-700"
             }`}
           >
             {tab.label}
-            {activeTab === tab.id && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#003DB8]" />
-            )}
+            {activeTab === tab.id && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#003DB8]" />}
           </button>
         ))}
       </div>
@@ -378,30 +342,16 @@ export default function SettingsPage() {
         <div className="space-y-8">
           {/* Profile Settings Section */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-1">
-              Profile Settings
-            </h2>
-            <p className="text-sm text-gray-500 mb-6">
-              When your password, email, or payout details change
-            </p>
+            <h2 className="text-lg font-semibold text-gray-900 mb-1">Profile Settings</h2>
+            <p className="text-sm text-gray-500 mb-6">When your password, email, or payout details change</p>
 
             {/* Profile Picture */}
             <div className="flex items-center gap-4 mb-8">
               <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
                 {user?.profilePicture ? (
-                  <img
-                    src={user.profilePicture}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <Image
-                    src="/assets/account-icon.svg"
-                    alt="Profile"
-                    width={40}
-                    height={40}
-                    className="opacity-50"
-                  />
+                  <Image src="/assets/account-icon.svg" alt="Profile" width={40} height={40} className="opacity-50" />
                 )}
                 {isUploadingPicture && (
                   <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
@@ -430,13 +380,7 @@ export default function SettingsPage() {
                 ) : (
                   <>
                     Upload
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M14 10V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V10"
                         stroke="#4A5565"
@@ -474,12 +418,7 @@ export default function SettingsPage() {
                   {isDeletingPicture ? (
                     <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                   ) : (
-                    <Image
-                      src="/assets/delete-icon.svg"
-                      alt="Delete"
-                      width={18}
-                      height={20}
-                    />
+                    <Image src="/assets/delete-icon.svg" alt="Delete" width={18} height={20} />
                   )}
                 </button>
               )}
@@ -489,9 +428,7 @@ export default function SettingsPage() {
           {/* Personal Information */}
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-base font-semibold text-gray-900">
-                Personal Information
-              </h3>
+              <h3 className="text-base font-semibold text-gray-900">Personal Information</h3>
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -503,27 +440,21 @@ export default function SettingsPage() {
             <div className="grid grid-cols-2 gap-6">
               {/* Full Name */}
               <div>
-                <label className="block text-sm text-gray-600 mb-2">
-                  Full Name
-                </label>
+                <label className="block text-sm text-gray-600 mb-2">Full Name</label>
                 <Input
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => handleInputChange("fullName", e.target.value)}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 border rounded-lg text-sm text-gray-900 disabled:cursor-not-allowed ${
-                    isEditing 
-                      ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" 
-                      : "border-gray-200 bg-gray-50"
+                    isEditing ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" : "border-gray-200 bg-gray-50"
                   }`}
                 />
               </div>
 
               {/* Email Address */}
               <div>
-                <label className="block text-sm text-gray-600 mb-2">
-                  Email Address
-                </label>
+                <label className="block text-sm text-gray-600 mb-2">Email Address</label>
                 <Input
                   type="email"
                   value={formData.email}
@@ -534,9 +465,7 @@ export default function SettingsPage() {
 
               {/* Phone Number */}
               <div>
-                <label className="block text-sm text-gray-600 mb-2">
-                  Phone Number
-                </label>
+                <label className="block text-sm text-gray-600 mb-2">Phone Number</label>
                 <PhoneInputFloatingLabel
                   defaultCountry="NG"
                   className={`max-w-full ${isEditing ? "[&_input]:border-[#003DB8] [&_input]:ring-2 [&_input]:ring-[#003DB8]/20 [&_input]:bg-white" : ""}`}
@@ -548,20 +477,14 @@ export default function SettingsPage() {
 
               {/* Account Type */}
               <div>
-                <label className="block text-sm text-gray-600 mb-2">
-                  Account Type
-                </label>
+                <label className="block text-sm text-gray-600 mb-2">Account Type</label>
                 <div className="relative">
                   <select
                     value={formData.accountType}
-                    onChange={(e) =>
-                      handleInputChange("accountType", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("accountType", e.target.value)}
                     disabled={!isEditing}
                     className={`w-full px-4 py-3 border rounded-lg text-sm text-gray-900 appearance-none cursor-pointer disabled:cursor-not-allowed ${
-                      isEditing 
-                        ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" 
-                        : "border-gray-200 bg-gray-50"
+                      isEditing ? "border-[#003DB8] ring-2 ring-[#003DB8]/20 bg-white" : "border-gray-200 bg-gray-50"
                     }`}
                   >
                     <option value="Advertiser">Advertiser</option>
@@ -578,9 +501,7 @@ export default function SettingsPage() {
           <div className="bg-white border border-gray-200 rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-red-600 mb-1">
-                  Danger Zone
-                </h3>
+                <h3 className="text-base font-semibold text-red-600 mb-1">Danger Zone</h3>
                 <p className="text-sm text-gray-500">
                   You can delete your account from here and all the data associated to it
                 </p>
@@ -601,9 +522,7 @@ export default function SettingsPage() {
       )}
 
       {/* Payment Tab Content */}
-      {activeTab === "payment" && (
-        <PaymentSettings />
-      )}
+      {activeTab === "payment" && <PaymentSettings />}
 
       {/* Notification Tab Content */}
       {activeTab === "notification" && (

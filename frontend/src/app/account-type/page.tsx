@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui";
-import AdvertiserIcon from "@/assets/advertiser-icon.svg";
-import PublisherIcon from "@/assets/publisher-icon.svg";
 
 type AccountType = "advertiser" | "publisher" | null;
 
@@ -46,7 +44,7 @@ export default function AccountTypePage() {
           >
             <div className="bg-white rounded-xl p-6 border border-gray-200 flex items-start gap-4">
               <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                <Image src={AdvertiserIcon} alt="Advertiser" width={34} height={30} />
+                <Image src="/assets/advertiser-icon.svg" alt="Advertiser" width={34} height={30} />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Sign up as an Advertiser</h3>
@@ -81,7 +79,7 @@ export default function AccountTypePage() {
           >
             <div className="bg-white rounded-xl p-6 border border-gray-200 flex items-start gap-4">
               <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                <Image src={PublisherIcon} alt="Publisher" width={24} height={27} />
+                <Image src="/assets/publisher-icon.svg" alt="Publisher" width={24} height={27} />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Sign up as a Publisher</h3>
