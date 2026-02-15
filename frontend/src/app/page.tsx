@@ -60,10 +60,18 @@ function NavBar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="sm:hidden bg-white border-t border-gray-100 px-4 pb-5 space-y-3">
-          <Link href="#advertisers" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>
+          <Link
+            href="#advertisers"
+            className="block py-2 text-gray-600 font-medium"
+            onClick={() => setMobileOpen(false)}
+          >
             Advertisers
           </Link>
-          <Link href="#publishers" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>
+          <Link
+            href="#publishers"
+            className="block py-2 text-gray-600 font-medium"
+            onClick={() => setMobileOpen(false)}
+          >
             Publishers
           </Link>
           <Link href="#works" className="block py-2 text-gray-600 font-medium" onClick={() => setMobileOpen(false)}>

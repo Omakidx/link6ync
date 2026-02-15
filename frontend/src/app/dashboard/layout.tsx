@@ -22,11 +22,7 @@ import {
 import Input from "@/components/ui/Input";
 import { ChevronDown } from "lucide-react";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const pathname = usePathname();
@@ -116,9 +112,7 @@ export default function DashboardLayout({
                       <Link href={item.href} className="flex items-center gap-3">
                         {item.useReactIcon ? (
                           <SiGoogleanalytics
-                            className={`w-5 h-5 flex-shrink-0 ${
-                              isActive(item.href) ? "text-white" : "text-gray-600"
-                            }`}
+                            className={`w-5 h-5 flex-shrink-0 ${isActive(item.href) ? "text-white" : "text-gray-600"}`}
                           />
                         ) : (
                           <Image
@@ -177,27 +171,20 @@ export default function DashboardLayout({
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <div className="group-data-[collapsible=icon]:hidden">
-        </div>
+        <div className="group-data-[collapsible=icon]:hidden"></div>
       </Sidebar>
 
-      <SidebarInset className="bg-gray-50 bg-[#FDFCFC]">
+      <SidebarInset className="bg-[#FDFCFC]">
         <div className="flex items-center justify-between px-4 sm:px-8 py-4 border-b border-gray-100 bg-white">
           {/* Header Search */}
           <div className="w-full max-w-[380px]">
             <div className="relative">
-              <Input 
-                type="text" 
-                placeholder="Search" 
+              <Input
+                type="text"
+                placeholder="Search"
                 className="w-full pl-10 pr-4 py-2 bg-white border-gray-200 rounded-lg text-sm"
                 leftIcon={
-                  <Image 
-                    src="/assets/search-icon.svg" 
-                    alt="Search" 
-                    width={16} 
-                    height={16}
-                    className="opacity-50"
-                  />
+                  <Image src="/assets/search-icon.svg" alt="Search" width={16} height={16} className="opacity-50" />
                 }
               />
             </div>
@@ -206,27 +193,15 @@ export default function DashboardLayout({
           {/* User Profile */}
           <Link href="/dashboard/settings" className="flex items-center gap-3 cursor-pointer">
             <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-200 relative flex justify-center items-center bg-gray-100">
-               {user?.profilePicture ? (
-                 <img
-                   src={user.profilePicture}
-                   alt={user.name || "User"}
-                   className="w-full h-full object-cover"
-                 />
-               ) : (
-                 <Image
-                   src="/assets/account-icon.svg" 
-                   alt="User"
-                   width={24}
-                   height={24}
-                   className="opacity-70"
-                 />
-               )}
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt={user.name || "User"} className="w-full h-full object-cover" />
+              ) : (
+                <Image src="/assets/account-icon.svg" alt="User" width={24} height={24} className="opacity-70" />
+              )}
             </div>
           </Link>
         </div>
-        <div>
-           {children}
-        </div>
+        <div>{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

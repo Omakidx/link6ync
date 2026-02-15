@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/store/authStore";
-import React from 'react';
+import React from "react";
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
@@ -19,9 +19,7 @@ export default function DashboardPage() {
     <div className="p-4 sm:p-6 md:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back, {user?.name || "User"} 👋
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user?.name || "User"} 👋</h1>
           <p className="text-gray-500">Overview of your account performance</p>
         </div>
         <button
